@@ -3,6 +3,8 @@
  * or more contributor license agreements. Licensed under the Elastic License;
  * you may not use this file except in compliance with the Elastic License.
  */
+
+import { i18n } from '@kbn/i18n';
 import {
   AppMountParameters,
   CoreSetup,
@@ -10,10 +12,18 @@ import {
   Plugin as PluginClass,
   PluginInitializerContext,
 } from '../../../../src/core/public';
+import {
+  HomePublicPluginSetup,
+  FeatureCatalogueCategory,
+} from '../../../../src/plugins/home/public';
 import { registerDataHandler } from './data_handler';
 
 export interface ObservabilityPluginSetup {
   dashboard: { register: typeof registerDataHandler };
+}
+
+interface SetupPlugins {
+  home: HomePublicPluginSetup;
 }
 
 export type ObservabilityPluginStart = void;
@@ -21,7 +31,7 @@ export type ObservabilityPluginStart = void;
 export class Plugin implements PluginClass<ObservabilityPluginSetup, ObservabilityPluginStart> {
   constructor(context: PluginInitializerContext) {}
 
-  public setup(core: CoreSetup) {
+  public setup(core: CoreSetup, plugins: SetupPlugins) {
     core.application.register({
       id: 'observability-overview',
       title: 'Overview',
@@ -38,6 +48,24 @@ export class Plugin implements PluginClass<ObservabilityPluginSetup, Observabili
         return renderApp(coreStart, params);
       },
     });
+
+    if (plugins.home) {
+      plugins.home.environment.update({ observability: true });
+
+      plugins.home.featureCatalogue.register({
+        id: 'observability',
+        title: i18n.translate('xpack.observability.featureCatalogueTitle', {
+          defaultMessage: 'Observability',
+        }),
+        description: i18n.translate('xpack.observability.featureCatalogueDescription', {
+          defaultMessage: 'Centralize & monitor',
+        }),
+        icon: 'logoObservability',
+        path: '/app/observability',
+        showOnHomePage: true,
+        category: FeatureCatalogueCategory.SOLUTION,
+      });
+    }
 
     return {
       dashboard: { register: registerDataHandler },
