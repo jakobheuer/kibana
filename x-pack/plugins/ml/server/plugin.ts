@@ -86,7 +86,7 @@ export class MlServerPlugin implements Plugin<MlPluginSetup, MlPluginStart, Plug
       order: 500,
       navLinkId: PLUGIN_ID,
       app: [PLUGIN_ID, 'kibana'],
-      catalogue: [PLUGIN_ID],
+      catalogue: [PLUGIN_ID, `${PLUGIN_ID}_file_data_visualizer`],
       privileges: null,
       reserved: {
         description: i18n.translate('xpack.ml.feature.reserved.description', {
@@ -99,7 +99,7 @@ export class MlServerPlugin implements Plugin<MlPluginSetup, MlPluginStart, Plug
             privilege: {
               api: user.api,
               app: [PLUGIN_ID, 'kibana'],
-              catalogue: [PLUGIN_ID],
+              catalogue: [PLUGIN_ID, `${PLUGIN_ID}_file_data_visualizer`],
               savedObject: {
                 all: [],
                 read: [],
@@ -112,7 +112,7 @@ export class MlServerPlugin implements Plugin<MlPluginSetup, MlPluginStart, Plug
             privilege: {
               api: admin.api,
               app: [PLUGIN_ID, 'kibana'],
-              catalogue: [PLUGIN_ID],
+              catalogue: [PLUGIN_ID, `${PLUGIN_ID}_file_data_visualizer`],
               savedObject: {
                 all: [],
                 read: [],
